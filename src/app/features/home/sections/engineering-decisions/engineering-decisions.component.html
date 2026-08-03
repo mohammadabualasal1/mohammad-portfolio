@@ -1,0 +1,18 @@
+<section class="decisions section" id="engineering-decisions">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Engineering Decisions</span>
+      <h2>How I think about backend design.</h2>
+    </div>
+
+    <div class="decisions__grid">
+      @for (decision of decisions; track decision.id; let i = $index) {
+        <div class="decision" appReveal [appRevealDelay]="(i % 2) * 60">
+          <span class="decision__index">{{ index(i) }}</span>
+          <h3 class="decision__title">{{ decision.title }}</h3>
+          <p class="decision__text">{{ decision.description }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+<section class="skills section" id="skills">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Skills</span>
+      <h2>Tools I reach for.</h2>
+    </div>
+
+    <div class="skills__grid">
+      @for (group of groups; track group.label; let i = $index) {
+        <div class="skills__group" appReveal [appRevealDelay]="(i % 3) * 60">
+          <h3 class="skills__label">{{ group.label }}</h3>
+          <ul class="skills__list">
+            @for (item of group.items; track item) {
+              <li class="tag">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+</section>

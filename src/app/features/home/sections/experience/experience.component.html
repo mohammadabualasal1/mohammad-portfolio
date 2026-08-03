@@ -1,0 +1,56 @@
+<section class="experience section" id="experience">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Experience</span>
+      <h2>Where I've worked and studied.</h2>
+    </div>
+
+    <div class="timeline">
+      @for (entry of experience; track entry.role) {
+        <div class="timeline__item" appReveal>
+          <div class="timeline__rail" aria-hidden="true">
+            <span class="timeline__dot"></span>
+          </div>
+          <div class="timeline__content">
+            <div class="timeline__head">
+              <h3 class="timeline__role">{{ entry.role }}</h3>
+              <span class="timeline__dates">{{ entry.dates }}</span>
+            </div>
+            <p class="timeline__org">{{ entry.organization }}</p>
+            <p class="timeline__desc">{{ entry.description }}</p>
+            <ul class="timeline__list">
+              @for (item of entry.responsibilities; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="credentials">
+      @for (item of education; track item.degree) {
+        <div class="credential" appReveal>
+          <span class="eyebrow">Education</span>
+          <h3 class="credential__title">{{ item.degree }}</h3>
+          <p class="credential__meta">{{ item.institution }} &middot; {{ item.date }}</p>
+          @if (item.detail) {
+            <ul class="credential__tags">
+              @for (d of item.detail; track d) {
+                <li class="tag">{{ d }}</li>
+              }
+            </ul>
+          }
+        </div>
+      }
+
+      @for (item of certifications; track item.name) {
+        <div class="credential" appReveal>
+          <span class="eyebrow">Certification</span>
+          <h3 class="credential__title">{{ item.name }}</h3>
+          <p class="credential__meta">{{ item.institution }} &middot; {{ item.date }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

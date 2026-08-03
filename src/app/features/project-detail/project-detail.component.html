@@ -1,0 +1,149 @@
+@if (project(); as p) {
+  <article class="detail">
+    <header class="detail__hero">
+      <div class="container">
+        <a class="detail__back link-arrow" routerLink="/" fragment="projects">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Back to projects
+        </a>
+
+        <span class="eyebrow detail__category">{{ p.category }}</span>
+        <h1 class="detail__title">{{ p.name }}</h1>
+        <p class="detail__overview">{{ p.overview }}</p>
+
+        @if (p.userRoles.length) {
+          <p class="detail__roles">
+            <span class="detail__roles-label">Roles</span>
+            {{ p.userRoles.join(' · ') }}
+          </p>
+        }
+
+        <ul class="detail__tags">
+          @for (t of p.techStack; track t) {
+            <li class="tag">{{ t }}</li>
+          }
+        </ul>
+      </div>
+    </header>
+
+    @if (p.cover) {
+      <div class="container detail__visual" appReveal>
+        <img class="detail__cover-image" [src]="p.cover.src" [alt]="p.cover.alt" loading="lazy" />
+      </div>
+    }
+
+    <div class="detail__body">
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Overview</span>
+        <ul class="detail__list detail__list--capabilities">
+          @for (c of p.coreCapabilities; track c) {
+            <li>{{ c }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Problem</span>
+        <h2>The problem</h2>
+        <p>{{ p.problem }}</p>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Solution</span>
+        <h2>The solution</h2>
+        <p>{{ p.solution }}</p>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Business Logic</span>
+        <h2>How the system behaves</h2>
+        <ul class="detail__list">
+          @for (b of p.businessLogic; track b) {
+            <li>{{ b }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="detail__section detail__section--split" appReveal>
+        <div>
+          <span class="eyebrow">Architecture</span>
+          <h2>Architecture</h2>
+          <p>{{ p.architecture }}</p>
+        </div>
+        <div>
+          <span class="eyebrow">Database</span>
+          <h2>Database</h2>
+          <p>{{ p.database }}</p>
+        </div>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Authentication</span>
+        <h2>Authentication &amp; authorization</h2>
+        <p>{{ p.authentication }}</p>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Engineering Decisions</span>
+        <h2>Engineering decisions</h2>
+        <div class="detail__decisions">
+          @for (d of p.engineeringDecisions; track d.title) {
+            <div class="detail__decision">
+              <h3>{{ d.title }}</h3>
+              <p>{{ d.description }}</p>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Challenges</span>
+        <h2>Challenges</h2>
+        <ul class="detail__list">
+          @for (c of p.challenges; track c) {
+            <li>{{ c }}</li>
+          }
+        </ul>
+      </section>
+
+      @if (p.screenshots.length) {
+        <section class="detail__section" appReveal>
+          <span class="eyebrow">Screenshots</span>
+          <h2>Screenshots</h2>
+          <div class="detail__gallery">
+            @for (shot of p.screenshots; track shot.src) {
+              <figure class="detail__gallery-item">
+                <img [src]="shot.src" [alt]="shot.alt" loading="lazy" />
+                <figcaption>{{ shot.alt }}</figcaption>
+              </figure>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Source</span>
+        <h2>Source code</h2>
+        @if (p.repo.status === 'public') {
+          <a class="btn btn--secondary" [href]="p.repo.url" target="_blank" rel="noopener noreferrer">
+            {{ p.repo.label }}
+          </a>
+        } @else {
+          <p class="detail__repo-note">{{ p.repo.label }}</p>
+        }
+      </section>
+
+      <section class="detail__section" appReveal>
+        <span class="eyebrow">Lessons Learned</span>
+        <h2>Lessons learned</h2>
+        <ul class="detail__list">
+          @for (l of p.lessonsLearned; track l) {
+            <li>{{ l }}</li>
+          }
+        </ul>
+      </section>
+    </div>
+  </article>
+}

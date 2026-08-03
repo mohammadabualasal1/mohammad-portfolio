@@ -1,0 +1,23 @@
+<section class="hero" id="top">
+  <div class="container hero__grid">
+    <div class="hero__content">
+      <p class="eyebrow hero__identity">{{ site.name }} — {{ site.title }}</p>
+
+      <h1 class="hero__headline">{{ site.heroHeadline }}</h1>
+
+      <p class="hero__text">{{ site.heroSupportingText }}</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" routerLink="/" fragment="projects">View Projects</a>
+        <a class="btn btn--secondary" [href]="site.resumePath" download target="_blank" rel="noopener">
+          Download Resume
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__portrait">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <img [src]="site.profileImage" alt="Portrait of {{ site.name }}" />
+    </div>
+  </div>
+</section>

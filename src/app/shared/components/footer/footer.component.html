@@ -1,0 +1,11 @@
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__copy">&copy; {{ year }} {{ site.name }}</p>
+    <nav class="footer__links" aria-label="Footer">
+      <a [href]="'mailto:' + site.email">Email</a>
+      <a [href]="site.github" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a [href]="site.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a [href]="site.resumePath" download target="_blank" rel="noopener">Resume</a>
+    </nav>
+  </div>
+</footer>

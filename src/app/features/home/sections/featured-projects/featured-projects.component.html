@@ -1,0 +1,42 @@
+<section class="projects section" id="projects">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Selected Work</span>
+      <h2>Featured Projects</h2>
+      <p class="section-head__text">
+        A closer look at four systems I've built end-to-end — from the business problem they solve to the
+        engineering decisions behind them.
+      </p>
+    </div>
+
+    <div class="project-list">
+      @for (project of projects; track project.slug; let i = $index) {
+        <article class="project" [class.project--feature]="project.featured" appReveal [appRevealDelay]="i * 40">
+          <span class="project__index">{{ index(project.order) }}</span>
+
+          <div class="project__body">
+            <span class="eyebrow">{{ project.category }}</span>
+            <h3 class="project__title">{{ project.name }}</h3>
+            <p class="project__summary">{{ project.summary }}</p>
+
+            <ul class="project__tags">
+              @for (t of project.techStack.slice(0, project.featured ? 7 : 5); track t) {
+                <li class="tag">{{ t }}</li>
+              }
+            </ul>
+
+            <div class="project__meta">
+              <span class="project__repo">{{ repoStatus(project) }}</span>
+              <a class="link-arrow" [routerLink]="['/projects', project.slug]">
+                View case study
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

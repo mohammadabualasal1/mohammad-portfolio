@@ -5,83 +5,98 @@ export const PROJECTS: Project[] = [
     slug: 'wasel',
     order: 1,
     name: 'Wasel',
-    category: 'B2B Last-Mile Delivery Management System',
+    category: 'B2B Delivery Management System',
     featured: true,
     summary:
-      'A B2B delivery management platform that takes merchant orders from intake through final delivery, with role-based workflows for operations staff, drivers, and administrators.',
+      "A B2B delivery management platform connecting business clients with a dedicated delivery team, with real-time status updates, proximity-based route ordering, and a two-phase pickup-and-delivery workflow across four user roles.",
     overview:
-      'Wasel is a delivery management platform built for merchants who need a structured way to submit delivery orders and follow them through to the final customer. It coordinates merchants, operations staff, drivers, and administrators around a single, shared order record — from intake to completion.',
+      "Wasel is a delivery management platform that connects business clients with a delivery team and manages pickup and delivery operations end-to-end. Admins, warehouse managers, captains, and clients share a single system built around structured shifts, real-time status updates, and location-aware delivery workflows.",
     cover: {
       src: '/assets/images/projects/wasel/landing-page.png',
       alt: 'Wasel landing page',
     },
-    userRoles: ['Merchant', 'Operations / Delivery Staff', 'Driver', 'Administrator'],
+    userRoles: ['Admin', 'Warehouse Manager', 'Captain', 'Client'],
     problem:
-      'Merchants need a structured system for submitting delivery orders and following each order through the delivery lifecycle until it reaches the final customer, while operations staff and drivers need clear, reliable visibility into status and assignment at every stage.',
+      "Business clients need a structured way to hand off pickup and delivery operations to a dedicated delivery team, while warehouse managers need visibility into shift assignment, order status, and captain workload, and captains need a clear, location-aware workflow for each stop.",
     solution:
-      'Wasel centralizes merchant order intake, delivery-order management, and role-based operational workflows in a single ASP.NET Core and Angular application backed by PostgreSQL. Merchants submit orders, operations and delivery staff move them through controlled status transitions, and administrators oversee the system as a whole.',
+      "Wasel organizes delivery operations into pickup and delivery shifts, assigns captains to those shifts, and moves each order through controlled status transitions from pickup to confirmed delivery. Google Maps location selection, SignalR-based real-time status updates, and Cloudinary-backed photo confirmation tie the workflow together across all four roles.",
     coreCapabilities: [
-      'Merchant order intake',
-      'Delivery lifecycle tracking',
-      'Role-based access control',
-      'Business-rule validation',
+      'Two-phase pickup & delivery workflow',
+      'Real-time order status updates (SignalR)',
+      'Proximity-based route ordering',
+      'Google Maps location handling & photo confirmation',
     ],
     businessLogic: [
-      'Merchant order intake with validation before an order enters the delivery pipeline',
-      'Delivery-order creation, assignment, and lifecycle tracking through defined statuses',
-      'Controlled status transitions that prevent an order from skipping or reversing workflow stages',
-      'Role-based operational workflows for operations staff, drivers, and administrators',
-      'Customer delivery information tracked alongside each order, even though final customers do not operate the system directly',
+      "Two-phase delivery workflow: pickup shifts move orders from clients into the system, and delivery shifts move them on to their final destination",
+      "Shift creation and captain assignment, with each shift representing a captain's set of pickup or delivery stops for a given period",
+      "Proximity-based route ordering that sorts a captain's stops using a Nearest Neighbor algorithm over Haversine-formula distances, reducing unnecessary travel between stops",
+      'Photo confirmation at pickup and delivery, stored through Cloudinary, so each handoff has supporting evidence',
+      'Controlled order-status transitions that keep pickup and delivery stages from being skipped or reversed',
+      'Manager oversight through order filtering by status, client, and date range, alongside shift creation, captain assignment, and captain management',
     ],
     architecture:
-      'The backend is an ASP.NET Core Web API with a clear separation between controllers, business and validation logic, and data access, paired with an Angular frontend. The focus throughout is on maintainable, predictable request handling rather than a specific named architectural pattern.',
+      'The backend is an ASP.NET Core Web API with a SignalR hub for pushing real-time order-status updates to connected clients, paired with an Angular frontend that integrates the Google Maps JavaScript API for location selection and Cloudinary for photo confirmation uploads.',
     database:
-      'Wasel uses PostgreSQL accessed through Entity Framework Core, with relational entities modeling merchants, delivery orders, delivery information, and the operational relationships between them.',
+      'Wasel uses PostgreSQL, accessed through Entity Framework Core where currently applicable, with relational entities modeling clients, shifts, captains, and delivery orders across the pickup and delivery workflow.',
     authentication:
-      'Access is controlled with JWT authentication, and endpoints enforce role-based authorization so that merchants, operations staff, drivers, and administrators can only reach the actions relevant to their role.',
+      'Access is controlled with JWT authentication, and endpoints enforce role-based authorization across the Admin, Warehouse Manager, Captain, and Client roles so each role can only reach the actions relevant to it.',
     engineeringDecisions: [
       {
-        title: 'Backend-enforced business rules',
+        title: 'Proximity-based route ordering',
         description:
-          'Delivery rules that determine whether an order can move forward are validated in the ASP.NET Core API rather than trusted to the Angular forms alone.',
+          "Captain stops are sorted with a Nearest Neighbor algorithm over Haversine-formula distances between coordinates. This is proximity-based route ordering, not an exact solution to the Traveling Salesman Problem, but it meaningfully reduces unnecessary travel between stops.",
       },
       {
-        title: 'Controlled status transitions',
+        title: 'Two-phase pickup and delivery workflow',
         description:
-          'Order-status changes follow a defined set of allowed transitions, which keeps the workflow from reaching an invalid state.',
+          'Splitting the order lifecycle into pickup shifts and delivery shifts keeps responsibility and status clearly separated at each stage, and creates accountability across the full delivery lifecycle.',
       },
       {
-        title: 'Role-based authorization',
+        title: 'Real-time status updates with SignalR',
         description:
-          'Merchant, operations, driver, and administrator permissions are enforced at the API level, independent of the Angular UI.',
+          'Order-status changes are pushed to connected clients through SignalR, so clients see delivery progress without manually refreshing the page.',
       },
       {
-        title: 'Relational data modeling',
+        title: 'Google Maps location handling',
         description:
-          'Merchants, delivery orders, and delivery information are modeled as related entities so the schema reflects how deliveries actually move through the business.',
+          'Pickup and delivery locations are captured through interactive pin-drop selection, reverse geocoding, and Places Autocomplete against the Google Maps JavaScript API, rather than free-text addresses.',
+      },
+      {
+        title: 'Photo confirmation through Cloudinary',
+        description:
+          'Pickup and delivery confirmations are backed by an uploaded photo, stored and served through Cloudinary, so each handoff has supporting evidence.',
+      },
+      {
+        title: 'Backend-enforced role-based authorization',
+        description:
+          'Admin, warehouse manager, captain, and client permissions — along with the order-status transition rules — are enforced in the ASP.NET Core API, not only in the Angular interface.',
       },
     ],
     challenges: [
-      'Representing a delivery order consistently across multiple workflow stages',
-      'Preventing invalid order updates as more roles and actions were added',
-      'Keeping authorization consistent between the Angular client and the ASP.NET Core API',
-      'Designing relational entities around real delivery operations rather than individual screens',
-      'Keeping backend logic maintainable as the number of modules and roles grew',
+      'Implementing proximity-based route ordering without overstating it as an exact optimal-route solution',
+      'Synchronizing SignalR real-time updates with the underlying order-status state',
+      'Integrating Google Maps pin-drop selection, reverse geocoding, and Places Autocomplete into the delivery workflow',
+      'Coordinating photo confirmation uploads through Cloudinary as part of the pickup and delivery flow',
+      'Keeping the two-phase pickup/delivery workflow and its status transitions consistent across four roles',
+      'Enforcing role-based authorization and business validation in the backend rather than the Angular client',
     ],
     lessonsLearned: [
-      'Large business systems need clear rules defined before implementation begins.',
-      'Status-based workflows require careful validation at every transition.',
-      'Authorization must exist in the backend even when Angular route protection is already in place.',
-      'Entity relationships should reflect business behavior, not just the screens built on top of them.',
-      'Maintainability becomes more important, not less, as modules and roles increase.',
+      'A proximity-based heuristic like Nearest Neighbor can meaningfully reduce travel distance without needing an exact route-optimization solution.',
+      'Real-time features such as SignalR updates still depend on a correctly modeled status workflow underneath.',
+      'Third-party map integrations need careful handling of geocoding and location-selection edge cases.',
+      'Two-phase workflows make accountability easier to reason about than a single generic status field.',
+      'Backend authorization and validation remain necessary even when the Angular UI already restricts access.',
     ],
     techStack: [
       'C#',
-      'ASP.NET Core',
-      'Entity Framework Core',
-      'PostgreSQL',
-      'JWT Authentication',
+      'ASP.NET Core Web API',
       'Angular',
+      'PostgreSQL',
+      'SignalR',
+      'Google Maps JavaScript API',
+      'Cloudinary',
+      'JWT Authentication',
+      'Entity Framework Core',
       'Role-Based Authorization',
     ],
     screenshots: [
@@ -144,11 +159,160 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    slug: 'grandevet',
+    slug: 'flowcore',
     order: 2,
+    name: 'FlowCore',
+    category: 'Kanban Project Management System',
+    featured: true,
+    summary:
+      'A full-stack Trello-style project management platform for organizing workspaces, projects, boards, tasks, and team collaboration through structured Kanban workflows.',
+    overview:
+      'FlowCore is a full-stack Trello-style Kanban project management system designed and implemented from a self-authored technical blueprint. The platform organizes work through workspaces, projects, boards, board columns, tasks, comments, and team membership, so a workspace can go from a top-level container down to an individual task without losing structure along the way.',
+    cover: {
+      src: '/assets/images/projects/flowcore/landing-page.png',
+      alt: 'FlowCore landing page',
+    },
+    userRoles: ['Owner', 'Member'],
+    problem:
+      'Teams need a structured way to organize work across workspaces, projects, and boards, while permissions need to depend on who is requesting an action and which resource it touches — not just a single global role.',
+    solution:
+      'FlowCore models a clear hierarchy — a workspace contains projects, projects contain boards, boards contain columns, and tasks belong to board columns and move through the Kanban workflow. Workspace-scoped authorization decides what an Owner or Member can do with a given resource, and an Angular CDK drag-and-drop board keeps that hierarchy interactive while the backend keeps it valid.',
+    coreCapabilities: [
+      'Workspace, project & board organization',
+      'Drag-and-drop Kanban board',
+      'Workspace-scoped authorization',
+      'Automatic task-completion tracking',
+    ],
+    businessLogic: [
+      'A workspace contains projects, projects contain boards, boards contain columns, and tasks belong to board columns and move through the Kanban workflow',
+      'Workspace members collaborate through task assignment, comments, and controlled permissions',
+      "Certain task-editing operations are restricted to the workspace Owner, while task movement is allowed to the Owner or the assigned user",
+      'Moving a task between columns can automatically set or clear its completion timestamp',
+      'Deleting a workspace, project, or board cascades through related data via explicit soft-delete rules rather than default database behavior',
+    ],
+    architecture:
+      'FlowCore is a full-stack application with an ASP.NET Core Web API backend — organized around workspaces, projects, boards, tasks, and comments across 8 controllers — and an Angular 21 frontend built with standalone components and signals.',
+    database:
+      'The backend uses PostgreSQL through a 7-entity relational schema in Entity Framework Core, with explicit cascading soft-delete behavior and automatic task-completion tracking that sets or clears completion timestamps based on column transitions.',
+    authentication:
+      'Authentication is handled with ASP.NET Core Identity and JWT authentication. Authorization is a separate, workspace-scoped layer on top of that: permissions depend on both the authenticated user and the workspace or resource being accessed, and are enforced by the backend across all 8 controllers rather than only by the Angular interface.',
+    engineeringDecisions: [
+      {
+        title: 'Workspace-scoped authorization',
+        description:
+          'Permissions depend on both the authenticated user and the workspace or resource being accessed, not just a single global role.',
+      },
+      {
+        title: 'Resource-level business rules',
+        description:
+          "Some operations depend on ownership or task assignment — task editing is restricted to the workspace Owner, while task movement is allowed to the Owner or the assigned user.",
+      },
+      {
+        title: 'Kanban task movement',
+        description:
+          'Angular CDK powers the drag-and-drop interaction, but the backend remains responsible for validating whether a given move is actually allowed.',
+      },
+      {
+        title: 'Automatic task completion',
+        description:
+          'Moving a task between board columns can automatically set or clear its completion timestamp, keeping completion state tied to the workflow instead of a manual toggle.',
+      },
+      {
+        title: 'Soft-delete relationships',
+        description:
+          'Deleting a workspace, project, or board cascades through related data according to explicitly designed soft-delete rules rather than relying on default database behavior.',
+      },
+      {
+        title: 'Full-stack architecture',
+        description:
+          'Angular owns the interactive Kanban experience while ASP.NET Core owns authentication, authorization, persistence, and business rules.',
+      },
+    ],
+    challenges: [
+      'Designing workspace-scoped permissions that account for both the requesting user and the resource being accessed',
+      'Enforcing resource-level authorization, such as owner-only task edits and owner-or-assignee task moves',
+      'Synchronizing drag-and-drop UI behavior in Angular with backend validation rules',
+      'Managing task-completion state based on column transitions',
+      'Handling related data correctly through soft deletion across workspaces, projects, and boards',
+      'Keeping authentication and authorization responsibilities clearly separated',
+    ],
+    lessonsLearned: [
+      'Resource authorization can require more context than a simple role check.',
+      'UI permissions must not replace API authorization.',
+      'Drag-and-drop interfaces still require backend validation of every move.',
+      'Workflow transitions are easier to reason about when represented explicitly in business logic.',
+      'Relational deletion behavior should be planned rather than left to default cascading behavior.',
+      'Clear technical documentation — a README, API reference, permissions model, and component-level design brief — improves long-term maintainability.',
+    ],
+    techStack: [
+      'C#',
+      'ASP.NET Core Web API',
+      'Entity Framework Core',
+      'PostgreSQL',
+      'ASP.NET Core Identity',
+      'JWT Authentication',
+      'Angular',
+      'Angular CDK',
+      'Bootstrap 5',
+      'TypeScript',
+    ],
+    screenshots: [
+      {
+        src: '/assets/images/projects/flowcore/landing-page.png',
+        alt: 'FlowCore landing page',
+      },
+      {
+        src: '/assets/images/projects/flowcore/login-page.png',
+        alt: 'FlowCore login page',
+      },
+      {
+        src: '/assets/images/projects/flowcore/auth.png',
+        alt: 'FlowCore account registration page',
+      },
+      {
+        src: '/assets/images/projects/flowcore/workspaces-list.png',
+        alt: 'Workspaces list view',
+      },
+      {
+        src: '/assets/images/projects/flowcore/workspace-members.png',
+        alt: 'Workspace members and role management',
+      },
+      {
+        src: '/assets/images/projects/flowcore/projects-list.png',
+        alt: 'Projects list within a workspace',
+      },
+      {
+        src: '/assets/images/projects/flowcore/kanban-board.png',
+        alt: 'Kanban board with drag-and-drop task columns',
+      },
+      {
+        src: '/assets/images/projects/flowcore/task-details.png',
+        alt: 'Task details panel with priority, due date, and comments',
+      },
+      {
+        src: '/assets/images/projects/flowcore/swagger1-api.png',
+        alt: 'FlowCore API reference (Swagger)',
+      },
+      {
+        src: '/assets/images/projects/flowcore/swagger2-api.png',
+        alt: 'FlowCore API reference (Swagger) — additional endpoints',
+      },
+      {
+        src: '/assets/images/projects/flowcore/swagger3-api.png',
+        alt: 'FlowCore API reference (Swagger) — additional endpoints',
+      },
+    ],
+    repo: {
+      status: 'private',
+      label: 'Private Repository — Code available upon request',
+    },
+  },
+  {
+    slug: 'grandevet',
+    order: 3,
     name: 'GrandeVet',
     category: 'Large Animal Veterinary Clinic Management System',
-    featured: false,
+    featured: true,
     summary:
       'A full-stack veterinary clinic platform that organizes clients, animals, appointments, medical records, prescriptions, and inventory across four staff roles.',
     overview:
@@ -237,132 +401,11 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    slug: 'bloodbridge',
-    order: 3,
-    name: 'BloodBridge',
-    category: 'Blood Donation and Hospital Request Platform',
-    featured: false,
-    summary:
-      'A full-stack platform connecting blood donors with hospitals, matching eligible donors to blood requests and managing the donation-confirmation workflow.',
-    overview:
-      'BloodBridge connects blood donors with hospitals through a structured request-and-response workflow. Hospitals publish blood requests, the system identifies eligible donors, and administrators verify participating hospitals before they can take part.',
-    cover: {
-      src: '/assets/images/projects/bloodbridge/bloodbridge-landing.png',
-      alt: 'BloodBridge landing page showing the platform name and donation statistics',
-    },
-    userRoles: ['Admin', 'Hospital', 'Donor'],
-    problem:
-      'Hospitals need a structured way to publish blood requests and reach eligible donors, while administrators need to verify and manage which hospitals are allowed to participate on the platform.',
-    solution:
-      'BloodBridge separates the platform into three roles — admin, hospital, and donor — and builds the request, response, and confirmation cycle around donor eligibility, hospital verification, and role-based access control.',
-    coreCapabilities: [
-      'Donor registration',
-      'Hospital verification',
-      'Blood request matching',
-      'Donation confirmation',
-    ],
-    businessLogic: [
-      'Donor registration and profile management, including the details needed to determine eligibility',
-      'Hospital registration, followed by administrator verification before a hospital can publish requests',
-      'Blood-request creation and management by verified hospitals',
-      'Automated donor-matching and notification workflow based on blood compatibility',
-      'Donation tracking through to a confirmation step',
-    ],
-    architecture:
-      'BloodBridge is a full-stack application built with an ASP.NET Core Web API backend, an Angular 17 frontend, and Entity Framework Core over a PostgreSQL database.',
-    database:
-      'PostgreSQL stores donors, hospitals, blood requests, and donation records, with relationships modeling which donors were matched to which requests and how each donation was confirmed.',
-    authentication:
-      'Authentication uses JWT with role-based authorization across the admin, hospital, and donor roles, and passwords are hashed with BCrypt.',
-    engineeringDecisions: [
-      {
-        title: 'Compatibility-driven donor matching',
-        description:
-          'Eligible donors are identified according to blood-type compatibility rules rather than a simple broadcast to every registered donor.',
-      },
-      {
-        title: 'Explicit hospital verification',
-        description:
-          'A hospital account cannot publish blood requests until an administrator has verified it, keeping that authority with the admin role rather than self-service.',
-      },
-      {
-        title: 'Separated notification workflow',
-        description:
-          'Donor-matching and notification are treated as a workflow distinct from request creation, keeping the two concerns independent.',
-      },
-      {
-        title: 'Role-based access across three roles',
-        description:
-          'Admin, hospital, and donor permissions are enforced at the API level so each role can only perform the actions appropriate to it.',
-      },
-    ],
-    challenges: [
-      'Designing the blood-request workflow from creation to confirmation',
-      'Identifying eligible donors according to compatibility rules',
-      'Managing the hospital verification process',
-      'Coordinating request, response, and confirmation states without conflicts',
-      'Maintaining role-based endpoint access across admin, hospital, and donor roles',
-    ],
-    lessonsLearned: [
-      'Matching logic should be represented clearly and tested carefully.',
-      'Verification workflows need explicit state and a clear administrative authority.',
-      'Notification workflows should be separated from core request creation.',
-      'Role permissions must be enforced in the backend, not assumed from the UI.',
-    ],
-    techStack: [
-      'C#',
-      'ASP.NET Core Web API',
-      'Entity Framework Core',
-      'Angular 17',
-      'TypeScript',
-      'Bootstrap 5',
-      'PostgreSQL',
-      'JWT Authentication',
-      'BCrypt',
-      'Swagger',
-    ],
-    screenshots: [
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-landing.png',
-        alt: 'BloodBridge landing page',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-login.png',
-        alt: 'BloodBridge login page',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-admin-dashboard.png',
-        alt: 'BloodBridge admin dashboard for hospital verification',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-hospital-dashboard.png',
-        alt: 'BloodBridge hospital dashboard',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-hospital-blood-requests.png',
-        alt: 'Hospital blood request management screen',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-donor-profile.png',
-        alt: 'Donor profile completion screen',
-      },
-      {
-        src: '/assets/images/projects/bloodbridge/bloodbridge-donor-dashboard.png',
-        alt: 'Donor dashboard',
-      },
-    ],
-    repo: {
-      status: 'public',
-      url: 'https://github.com/mohammadabualasal1/BloodBridge',
-      label: 'View on GitHub',
-    },
-  },
-  {
     slug: 'daily-plus',
     order: 4,
     name: 'Daily Plus',
     category: 'AI-Powered News Aggregation Platform',
-    featured: false,
+    featured: true,
     summary:
       'A full-stack news aggregator that retrieves articles from external sources and uses the Anthropic Claude API to generate concise AI summaries.',
     overview:

@@ -21,11 +21,11 @@ export const CAPABILITIES: Capability[] = [
     projectSlug: 'grandevet',
   },
   {
-    title: 'Blood Matching Workflow',
+    title: 'Workspace-Scoped Authorization',
     description:
-      'Matching eligible donors to hospital requests by compatibility, with a separate verification and notification flow.',
-    projectName: 'BloodBridge',
-    projectSlug: 'bloodbridge',
+      'Enforcing permissions that depend on both the authenticated user and the workspace or resource being accessed, across 8 controllers.',
+    projectName: 'FlowCore',
+    projectSlug: 'flowcore',
   },
   {
     title: 'AI Integration',

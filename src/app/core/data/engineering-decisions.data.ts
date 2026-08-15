@@ -39,6 +39,6 @@ export const ENGINEERING_DECISIONS: EngineeringDecision[] = [
     id: 'workflow-states',
     title: 'Workflow states',
     description:
-      'Systems such as Wasel and BloodBridge depend on controlled state transitions — order statuses, request and confirmation states — to prevent invalid business operations from happening.',
+      'Systems such as Wasel and FlowCore depend on controlled state transitions — delivery statuses, task and column movements — to prevent invalid business operations from happening.',
   },
 ];

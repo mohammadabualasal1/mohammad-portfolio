@@ -26,9 +26,23 @@
 }
 
 .hero__headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.hero__headline-primary {
   font-size: var(--fs-hero);
-  line-height: 1.08;
+  font-weight: 700;
+  line-height: 1.05;
   color: var(--color-text);
+}
+
+.hero__headline-secondary {
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--color-text-muted);
 }
 
 .hero__text {

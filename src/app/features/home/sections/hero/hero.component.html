@@ -1,9 +1,12 @@
 <section class="hero" id="top">
   <div class="container hero__grid">
     <div class="hero__content">
-      <p class="eyebrow hero__identity">{{ site.name }} — {{ site.title }}</p>
+      <p class="eyebrow hero__identity">{{ site.name }}</p>
 
-      <h1 class="hero__headline">{{ site.heroHeadline }}</h1>
+      <h1 class="hero__headline">
+        <span class="hero__headline-primary">{{ site.heroHeadlinePrimary }}</span>
+        <span class="hero__headline-secondary">{{ site.heroHeadlineSecondary }}</span>
+      </h1>
 
       <p class="hero__text">{{ site.heroSupportingText }}</p>
 

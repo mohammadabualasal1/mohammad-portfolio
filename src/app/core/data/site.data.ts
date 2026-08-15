@@ -3,7 +3,8 @@ export const SITE = {
   title: 'Junior Full-Stack .NET Developer',
   secondaryPositioning: 'Full-Stack .NET Developer with Angular experience',
   location: 'Amman, Jordan',
-  heroHeadline: 'Building reliable full-stack applications with ASP.NET Core and Angular.',
+  heroHeadlinePrimary: 'Software Engineer',
+  heroHeadlineSecondary: 'ASP.NET Core & Angular',
   heroSupportingText:
     'Computer Science graduate with hands-on experience building full-stack web applications using ASP.NET Core, Angular, Entity Framework Core, PostgreSQL, and SQL Server. Passionate about designing maintainable software with clean architecture, secure authentication, and business-driven solutions.',
   shortIntroduction:
